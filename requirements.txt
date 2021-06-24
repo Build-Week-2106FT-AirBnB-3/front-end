@@ -5,3 +5,10 @@ scikit-image
 wandb
 seaborn
 numpy
+math
+plotly
+dash
+dash_core_components
+dash_html_components
+dash_daq
+category_encoders
