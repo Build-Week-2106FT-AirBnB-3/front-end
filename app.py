@@ -5,7 +5,7 @@
 # We start with the import of standard ML librairies
 import pandas as pd
 import numpy as np
-import math
+# import math
 
 from sklearn.datasets import make_regression
 from sklearn.ensemble import RandomForestRegressor
@@ -87,17 +87,20 @@ fig_features_importance.show()
 
 # We record the name, min, mean and max of the three most important features
 dropdown_1_label = df_feature_importances.index[0]
-dropdown_1_min = math.floor(df[dropdown_1_label].min())
+# dropdown_1_min = math.floor(df[dropdown_1_label].min())
+dropdown_1_min = round(df[dropdown_1_label].min())
 dropdown_1_mean = round(df[dropdown_1_label].mean())
 dropdown_1_max = round(df[dropdown_1_label].max())
 
 dropdown_2_label = df_feature_importances.index[1]
-dropdown_2_min = math.floor(df[dropdown_2_label].min())
+# dropdown_2_min = math.floor(df[dropdown_2_label].min())
+dropdown_2_min = round(df[dropdown_2_label].min())
 dropdown_2_mean = round(df[dropdown_2_label].mean())
 dropdown_2_max = round(df[dropdown_2_label].max())
 
 dropdown_3_label = df_feature_importances.index[2]
-dropdown_3_min = math.floor(df[dropdown_3_label].min())
+# dropdown_3_min = math.floor(df[dropdown_3_label].min())
+dropdown_3_min = round(df[dropdown_3_label].min())
 dropdown_3_mean = round(df[dropdown_3_label].mean())
 dropdown_3_max = round(df[dropdown_3_label].max())
 
