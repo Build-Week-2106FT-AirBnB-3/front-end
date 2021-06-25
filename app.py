@@ -27,6 +27,21 @@ from sklearn.model_selection import train_test_split
 df = pd.read_csv('clean_data.csv')
 
 # importing our model
+# target='price'
+# X = df.drop(columns=target)
+# y = df[target]
+
+# # Let's split into a test and
+# X_train, X_t, y_train, y_t = train_test_split(X,y, test_size=.2, random_state=7)
+
+# # Let's split our test data into validation and test
+# X_val, X_test, y_val, y_test = train_test_split(X_t,y_t, test_size=.2, random_state=7)
+
+
+# model = make_pipeline(OneHotEncoder(use_cat_names=True),
+#                          SimpleImputer(),
+#                          RandomForestRegressor(random_state=70))
+# model.fit(X_train,y_train)
 
 infile = open('random_forest_model', 'rb')
 model = pickle.load(infile)
@@ -54,19 +69,19 @@ fig_features_importance.update_layout(title_text='<b>Features Importance of the 
 
 # We record the name, min, mean and max of the three most important features
 dropdown_1_label = df_feature_importances.index[0]
-dropdown_1_min = round(df[dropdown_1_label].min())
-dropdown_1_mean = round(df[dropdown_1_label].mean())
-dropdown_1_max = round(df[dropdown_1_label].max())
+dropdown_1_min = round(df[dropdown_1_label].min(),5)
+dropdown_1_mean = round(df[dropdown_1_label].mean(),5)
+dropdown_1_max = round(df[dropdown_1_label].max(),5)
 
 dropdown_2_label = df_feature_importances.index[1]
-dropdown_2_min = round(df[dropdown_2_label].min())
-dropdown_2_mean = round(df[dropdown_2_label].mean())
-dropdown_2_max = round(df[dropdown_2_label].max())
+dropdown_2_min = round(df[dropdown_2_label].min(),5)
+dropdown_2_mean = round(df[dropdown_2_label].mean(),5)
+dropdown_2_max = round(df[dropdown_2_label].max(),5)
 
-dropdown_3_label = df_feature_importances.index[3]
-dropdown_3_min = round(df[dropdown_3_label].min())
-dropdown_3_mean = round(df[dropdown_3_label].mean())
-dropdown_3_max = round(df[dropdown_3_label].max())
+dropdown_3_label = df_feature_importances.index[5]
+dropdown_3_min = round(df[dropdown_3_label].min(),5)
+dropdown_3_mean = round(df[dropdown_3_label].mean(),5)
+dropdown_3_max = round(df[dropdown_3_label].max(),5)
 
 
 ###############################################################################
@@ -105,7 +120,7 @@ app.layout = html.Div(style={'textAlign': 'center', 'width': '800px', 'font-fami
                             max=dropdown_1_max,
                             step=0.029311,
                             value=dropdown_1_mean,
-                            marks={i: '{}°'.format(i) for i in range(dropdown_1_min, dropdown_1_max+1)}
+                            marks={i: '{}°'.format(i) for i in np.arange(dropdown_1_min, dropdown_1_max)}
                             ),
 
                         # The same logic is applied to the following names / sliders
@@ -117,7 +132,7 @@ app.layout = html.Div(style={'textAlign': 'center', 'width': '800px', 'font-fami
                             max=dropdown_2_max,
                             step=0.080384,
                             value=dropdown_2_mean,
-                            marks={i: '{}°'.format(i) for i in range(dropdown_2_min, dropdown_2_max)}
+                            marks={i: '{}°'.format(i) for i in np.arange(dropdown_2_min, dropdown_2_max)}
                         ),
 
                         html.H4(children=dropdown_3_label),
@@ -128,11 +143,11 @@ app.layout = html.Div(style={'textAlign': 'center', 'width': '800px', 'font-fami
                             max=dropdown_3_max,
                             step=0.6,
                             value=dropdown_3_mean,
-                            marks={i: '{}people'.format(i) for i in range(dropdown_2_min, dropdown_2_max)},
+                            marks={i: '{}people'.format(i) for i in np.arange(dropdown_2_min, dropdown_2_max)},
                         ),
                         
-                        # The predictin result will be displayed and updated here
-                        html.H2(id="prediction_result"),
+                        # The prediction result will be displayed and updated here
+                        html.H2(id="prediction_result")
 
                     ])
 
@@ -147,20 +162,27 @@ def update_prediction(X1, X2, X3):
     # We create a NumPy array in the form of the original features
     # ["Pressure","Viscosity","Particles_size", "Temperature","Inlet_flow", "Rotating_Speed","pH","Color_density"]
     # Except for the X1, X2 and X3, all other non-influencing parameters are set to their mean
-    input_X = np.array([X1,
-                       df["number_of_reviews"].mean(),
-                       df["bedrooms"].mean(),
-                       X2,
-                       df["review_scores_rating"].mean(),
-                       df["host_listing_count"].mean(),
-                       X3,
-                       df["beds"].mean()])       
+    input_X = np.array([258668827,
+                        1,
+                        1,
+                        1,
+                        X1,
+                        X2,
+                        X3,
+                        df["bedrooms"].mean(),
+                        df['beds'].mean(),
+                        df['number_of_reviews'].mean(),
+                        df["review_scores_rating"].mean(),
+                        1,
+                        1]).reshape(1, -1)
+
     
     # Prediction is calculated based on the input_X array
-    prediction = model.named_steps['randomforestregressor'].predict(input_X)[1]
+    prediction = model.named_steps['randomforestregressor'].predict(input_X)
     
     # And retuned to the Output of the callback function
-    return "Prediction: {}".format(round(prediction,1))
+    return "Prediction in Yen: {}".format(round(prediction[0]))
+    # return 'this is working'
 
 if __name__ == "__main__":
     app.run_server()
