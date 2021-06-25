@@ -111,7 +111,7 @@ env.bak/
 venv.bak/
 *.pyc
 .DS_Store
-
+.icloud
 
 # Spyder project settings
 .spyderproject
