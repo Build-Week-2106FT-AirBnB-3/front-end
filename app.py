@@ -88,6 +88,8 @@ dropdown_3_max = round(df[dropdown_3_label].max(),5)
 
 app = dash.Dash()
 
+server = app.server
+
 # The page structure will be:
 #    Features Importance Chart
 #    <H4> Feature #1 name
